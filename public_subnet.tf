@@ -1,3 +1,4 @@
+
 # Configuration section for Public Subnet
 resource "aws_subnet" "public_subnet_az_a" {
   count = length(var.public_subnet_cidr_az_a)
@@ -5,13 +6,28 @@ resource "aws_subnet" "public_subnet_az_a" {
   cidr_block        = element(var.public_subnet_cidr_az_a, count.index)
   vpc_id            = aws_vpc.vpc.id
   availability_zone = var.availability_zone[0]
+
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.env}-${var.public_subnet_interfix}-a-${count.index}",
+      )
+    }
+  )
 }
+
 
 # Configuration section for route table public subnet
 resource "aws_route_table" "public_subnet" {
   vpc_id = aws_vpc.vpc.id
 
-  
+  tags = merge(
+    {
+      "Name" = format(
+        "${var.env}-${var.public_subnet_interfix}",
+      )
+    }
+  )
 }
 
 # Configuration section for default route to internet from public subnet
